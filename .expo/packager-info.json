@@ -1,10 +1,9 @@
 {
+  "expoServerPort": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 26948,
-  "expoServerNgrokUrl": "https://b3-979.saihtunlu.sms.exp.direct",
-  "packagerNgrokUrl": "https://packager.b3-979.saihtunlu.sms.exp.direct",
-  "ngrokPid": 6180,
-  "webpackServerPort": null
+  "packagerPort": null,
+  "packagerPid": null
 }

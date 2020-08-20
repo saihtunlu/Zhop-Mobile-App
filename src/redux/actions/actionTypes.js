@@ -5,8 +5,5 @@ export const GET_ORDER = 'GET_ORDER'
 export const GET_FAV = 'GET_FAV'
 export const GET_ADDRESS = 'GET_ADDRESS'
 export const GET_VAR = 'GET_VAR'
-
-
-
-
-
+export const GET_DISCOUNT = 'GET_DISCOUNT'
+export const GET_LATEST = 'GET_LATEST'

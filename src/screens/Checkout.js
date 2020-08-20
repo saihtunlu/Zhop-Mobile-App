@@ -103,7 +103,7 @@ class Checkout extends React.Component {
         this.setState({
             id: address.id,
             state: address.state,
-            city: address.city,
+            city: { label: address.city },
             addressLine1: address.addressLine1,
             addressLine2: address.addressLine2
         })
@@ -745,7 +745,7 @@ class Checkout extends React.Component {
         data.email = email;
         data.phone = phone;
         data.state = state;
-        data.city = city;
+        data.city = city.label;
         data.addressLine1 = addressLine1;
         data.addressLine2 = addressLine2;
         data.selectedPayment = selectedPayment;
@@ -761,7 +761,7 @@ class Checkout extends React.Component {
                 this.props.navigation.navigate('OrderComplete', { order: response.data, isSuccess: true })
             })
             .catch(error => {
-                console.log("Checkout -> startOrder -> error", error)
+                console.log("Checkout -> startOrder -> error", error.response.data)
                 this.props.navigation.navigate('OrderComplete', { isSuccess: false })
                 this.setState({ isOrdering: false });
             });

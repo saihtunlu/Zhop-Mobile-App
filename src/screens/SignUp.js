@@ -44,6 +44,8 @@ export default class SignUp extends Component {
   handleSignUp() {
     let value = this.context;
     const { email, username, password, password_confirmation, ThemeColor } = this.state;
+    console.log("SignUp -> handleSignUp -> password", password)
+    console.log("SignUp -> handleSignUp -> password_confirmation", password_confirmation)
     if (password !== password_confirmation) {
       this.setState({ message: "Password Confirmation Doesn't Match!", messageColor: ThemeColor.danger })
       return false;
@@ -63,7 +65,7 @@ export default class SignUp extends Component {
       .then(response => {
         this.setState({ loading: false, message: response.data.message, messageColor: ThemeColor.success })
         console.log("Forgot -> handleForgot -> response", response.data.message)
-        // value.login(email, password)
+        value.login(email, password)
       })
       .catch(error => {
         console.log("Forgot -> handleForgot -> error", error)
@@ -114,7 +116,7 @@ export default class SignUp extends Component {
             <TextField
               title={'Username'}
               onChangeText={(text) => this.setState({ username: text })}
-              placeholder="Enter your email address"
+              placeholder="Enter your name"
               style={{ ...styles.inputStyle, backgroundColor: ThemeColor.Bg3, color: ThemeColor.text1 }}
               hideUnderline
               titleStyle={{ marginLeft: 10, color: ThemeColor.text2 }}
@@ -145,8 +147,9 @@ export default class SignUp extends Component {
               title={'Password Confirmation'}
               style={{ ...styles.inputStyle, backgroundColor: ThemeColor.Bg3, color: ThemeColor.text1 }}
               hideUnderline
-              onChange={(text) => this.setState({ password_confirmation: text })}
+              onChange={(text) => this.setState({ password_confirmation: text.nativeEvent.text })}
               titleStyle={{ marginLeft: 10, color: ThemeColor.text2 }}
+
               value={this.state.password_confirmation}
               secureTextEntry
             />

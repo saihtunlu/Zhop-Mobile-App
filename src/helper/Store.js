@@ -1,5 +1,5 @@
 import store from '../redux/store';
-import { GET_DATA, GET_ORDER, GET_ADDRESS, GET_FAV } from '../redux/actions/actionTypes'
+import { GET_DATA, GET_ORDER, GET_ADDRESS, GET_FAV, GET_LATEST, GET_DISCOUNT } from '../redux/actions/actionTypes'
 import axios from '../axios'
 
 export const getAllData = async () => {
@@ -7,6 +7,8 @@ export const getAllData = async () => {
     // get data ok
     if (null != res && null != res.data) {
         store.dispatch({ type: GET_DATA, payload: res.data })
+        store.dispatch({ type: GET_LATEST, payload: '' })
+        store.dispatch({ type: GET_DISCOUNT, payload: '' })
     }
 }
 

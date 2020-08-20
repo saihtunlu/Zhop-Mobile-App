@@ -6,9 +6,7 @@ import {
   StyleSheet,
   RefreshControl,
   Animated,
-  InteractionManager,
   StatusBar,
-  ActivityIndicator,
   Platform,
   Text,
 } from "react-native";
@@ -28,18 +26,14 @@ import { getAllData } from '../helper/Store'
 
 function Browse(props) {
   const navigation = props.navigation;
-  console.log("Browse -> props", props)
   const [refreshing, setRefreshing] = useState(false);
-  const [isReady, setIsReady] = useState(false);
   const [ThemeColor, setThemeColor] = useState(store.getState().Theme.theme);
-  const [LatestNo, setLatestNo] = useState(9);
-  const [number_of_cart, setNumber_of_cart] = useState(0);
-  const { user, setUser } = useContext(AuthContext)
-  const products = props.products;
+  const [LatestNo] = useState(9);
+  const { user } = useContext(AuthContext)
+  const latest = props.latest;
+  const discount = props.discount;
   const categories = props.categories;
   const events = props.events;
-  const [latestProducts, setLatestProducts] = useState([]);
-  const [discountProducts, setDiscountProducts] = useState([]);
   var diffClamp = Animated.diffClamp(scrollY, 0, header_height);
   var diffClampBanner = Animated.diffClamp(scrollY, 0, header_height + 200);
   const OpacityAnimated = diffClamp.interpolate({
@@ -53,27 +47,6 @@ function Browse(props) {
     outputRange: [0, -header_height - 200],
     extrapolate: "clamp",
   });
-
-
-  useEffect(() => {
-    InteractionManager.runAfterInteractions(() => {
-      var values = props.cart.map(item => Number(item.addCart));
-      if (!values.every(value => isNaN(value))) {
-        var cart_no = values.reduce((prev, curr) => {
-          const value = Number(curr);
-          if (!isNaN(value)) {
-            return prev + curr;
-          } else {
-            return prev;
-          }
-        }, 0);
-        setNumber_of_cart(cart_no)
-      }
-      FilerDiscount();
-      FilterLatest();
-    });
-  }, []);
-
 
 
   //Subscribe to redux store
@@ -91,54 +64,6 @@ function Browse(props) {
     })
   }, [refreshing]);
 
-  const FilerDiscount = async () => {
-    var discount = [];
-    products.forEach((data, key) => {
-      if (key > 6) {
-        return false;
-      }
-      if (data.type === "Simple Product") {
-        if (data.discount) {
-          discount.push(data);
-        }
-      } else {
-        var check = data.variations.filter((variation) => {
-          return variation.discount;
-        });
-        if (check.length > 0) {
-          discount.push(data);
-        }
-      }
-    });
-
-    setDiscountProducts(discount);
-  };
-  const FilterLatest = async () => {
-    var latest = [];
-    products.forEach((data, key) => {
-      if (key > LatestNo) {
-        return false;
-      }
-      latest.push(data);
-    });
-    setLatestProducts(latest);
-    setRefreshing(false);
-    setIsReady(true);
-  };
-  if (!isReady) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: ThemeColor.Bg1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <ActivityIndicator size="large" color={`rgb(${ThemeColor.primary})`} />
-      </View>
-    );
-  }
   return (
     <View
       style={{
@@ -268,16 +193,12 @@ function Browse(props) {
             labelStyle={{ fontSize: 12 }}
             onPress={() => navigation.navigate("grid")}
             size={"xSmall"}
-            style={{
-              backgroundColor: `rgb(${ThemeColor.primary})`,
-            }}
+            style={{ backgroundColor: `rgb(${ThemeColor.primary})` }}
             iconSource={() => (
               <Feather
                 name={"chevron-right"}
                 size={10}
-                style={{
-                  marginLeft: 5,
-                }}
+                style={{ marginLeft: 5, }}
                 color={"white"}
               />
             )}
@@ -302,7 +223,6 @@ function Browse(props) {
               color: ThemeColor.header,
               fontSize: 16
             }}
-
           >
             Discounts
           </Text>
@@ -332,7 +252,7 @@ function Browse(props) {
           />
         </View>
         <Products
-          products={discountProducts}
+          products={discount}
           ThemeColor={ThemeColor}
           type={"List"}
           navigation={navigation}
@@ -368,7 +288,7 @@ function Browse(props) {
           />
         </View>
         <Products
-          products={latestProducts}
+          products={latest}
           ThemeColor={ThemeColor}
           navigation={navigation}
           style={{ marginBottom: 10 }}
@@ -380,7 +300,8 @@ function Browse(props) {
 
 //Map the redux state to your props.
 const mapStateToProps = state => ({
-  products: state.Data.products,
+  latest: state.Data.latest,
+  discount: state.Data.discount,
   categories: state.Data.categories,
   events: state.Data.events,
   cart: state.Cart.cart

@@ -1,9 +1,13 @@
 {
   "expo": {
-    "name": "Zhop",
+    "name": "ZHOP",
     "slug": "zhop",
     "privacy": "public",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/assets/icon.png",
@@ -15,11 +19,15 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "android": {
       "package": "com.saihl.Zhop",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1
     },
-    "description": ""
+    "description": "",
+    "githubUrl": "https://github.com/saihtunlu/Zhop-Mobile-App"
   }
 }

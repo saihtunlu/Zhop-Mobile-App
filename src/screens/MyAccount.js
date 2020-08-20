@@ -3,7 +3,6 @@ import React, { Component, createRef } from "react";
 import {
     Dimensions,
     StyleSheet,
-    AsyncStorage,
     InteractionManager,
     ActivityIndicator,
     StatusBar,
@@ -19,8 +18,8 @@ import {
 import { AuthContext } from "../navigation/AuthProvider";
 import TouchableScale from 'react-native-touchable-scale';
 import Feather from 'react-native-vector-icons/Feather';
-const { width, height } = Dimensions.get("window");
-import Divider from '../components/Divider'
+const { width } = Dimensions.get("window");
+import { Divider, Loader } from '../components'
 const marginTop = Platform.OS == 'ios' ? 55 : 15 + StatusBar.currentHeight;
 const header_height = Platform.OS == 'ios' ? 90 : 50 + StatusBar.currentHeight;
 import ActionSheet from "react-native-actions-sheet";
@@ -40,6 +39,7 @@ class MyAccount extends Component {
             ThemeColor: store.getState().Theme.theme,
             orders: 0,
             fav: 0,
+            isUpdating: false
         };
         store.subscribe(() => {
             var color = store.getState().Theme.theme;
@@ -75,6 +75,7 @@ class MyAccount extends Component {
             });
             let imageUri = result ? `data:image/jpg;base64,${result.base64}` : null;
             if (result) {
+                this.setState({ isUpdating: true })
                 axios.post(`/updateProfile`, { file: imageUri, id: user.user.id })
                     .then(response => {
                         user.user.profile_image = response.data;
@@ -82,8 +83,10 @@ class MyAccount extends Component {
                         SecureStore.deleteItemAsync("user").then(() => {
                             SecureStore.setItemAsync('user', JSON.stringify(user))
                         })
+                        this.setState({ isUpdating: false })
                     })
                     .catch(error => {
+                        this.setState({ isUpdating: false })
                     });
             }
 
@@ -117,7 +120,7 @@ class MyAccount extends Component {
         })
         let value = this.context;
         let user = value.user.user
-        const { navigation, ThemeColor, number_of_cart, orders, fav } = this.state;
+        const { navigation, ThemeColor, number_of_cart, orders, fav, isUpdating } = this.state;
         const Lists = [{
             name: 'My Favorite',
             icon: 'heart',
@@ -326,9 +329,7 @@ class MyAccount extends Component {
                             </TouchableScale>)}
                     </View>
                 </ScrollView>
-
-
-
+                <Loader show={isUpdating} ThemeColor={ThemeColor} />
             </View>
         );
     }

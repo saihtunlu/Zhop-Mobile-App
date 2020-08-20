@@ -191,6 +191,7 @@ class Product extends Component {
             backgroundColor={`rgb(${ThemeColor.primary})`}
             style={{
               height: 45,
+              width: '65%',
               paddingHorizontal: 30,
               flexDirection: 'row',
               alignItems: 'center',
@@ -209,6 +210,7 @@ class Product extends Component {
             backgroundColor={`rgb(${ThemeColor.primary})`}
             style={{
               height: 45,
+              width: '65%',
               paddingHorizontal: 30,
               flexDirection: 'row',
               alignItems: 'center',
@@ -641,14 +643,14 @@ class Product extends Component {
 
   AddToCart = async () => {
     this.setState({ adding: true })
-    const { product, selectedProduct, addCart, number_of_stock } = this.state;
+    const { product, selectedProduct, addCart, number_of_cart } = this.state;
     var cart = this.props.cart;
     if (product.type === 'Variable Product') {
       if (selectedProduct.length === 0) {
         this.renderToast('Please, Select a product first!')
         this.setState({ adding: false })
       } else {
-        this.setState({ number_of_stock: parseInt(number_of_stock) + parseInt(addCart) })
+        this.setState({ number_of_cart: parseInt(number_of_cart) + parseInt(addCart) })
         var Selected = selectedProduct;
         Selected.title = product.title;
         Selected.addCart = addCart;
@@ -680,7 +682,10 @@ class Product extends Component {
         this.renderToast(`Sorry! This product is current out of stock.`)
         this.setState({ adding: false })
       } else {
-        this.setState({ number_of_stock: parseInt(number_of_stock) + parseInt(addCart) })
+        var check = cart.filter((data, index) => {
+          return data.id === product.id;
+        })
+        this.setState({ number_of_cart: parseInt(number_of_cart) + parseInt(addCart) })
         product.addCart = addCart;
         if (check.length > 0) {
           var index = cart
@@ -779,11 +784,11 @@ class Product extends Component {
       extrapolate: 'clamp'
     })
 
-    const BottomAnimated = diffClamp.interpolate({
-      inputRange: [0, header_height - 7],
-      outputRange: [0, header_height + 7],
-      extrapolate: 'clamp'
-    })
+    // const BottomAnimated = diffClamp.interpolate({
+    //   inputRange: [0, header_height - 7],
+    //   outputRange: [0, header_height + 7],
+    //   extrapolate: 'clamp'
+    // })
 
 
     if (!this.state.isReady || isPageLoading) {
@@ -794,7 +799,7 @@ class Product extends Component {
       )
     }
     return (
-      <View style={{ backgroundColor: ThemeColor.Bg1, flex: 1 }}>
+      <View style={{ backgroundColor: ThemeColor.Bg1, flex: 1, paddingBottom: 65 }}>
         <View style={{
           ...styles.header
         }} >
@@ -868,9 +873,9 @@ class Product extends Component {
           </View>
           <Products products={RelatedProducts} ThemeColor={ThemeColor} navigation={navigation} />
         </Animated.ScrollView>
-        <Animated.View style={{ ...styles.bottomAdd, backgroundColor: ThemeColor.Bg2, transform: [{ translateY: BottomAnimated }] }}>
+        <View style={{ ...styles.bottomAdd, backgroundColor: ThemeColor.Bg2 }}>
           {this.renderBottomBar(product)}
-        </Animated.View>
+        </View>
       </View>
 
     );
@@ -932,11 +937,9 @@ const styles = StyleSheet.create({
 
   bottomAdd: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 0,
     left: 0,
     right: 0,
-    borderRadius: 30,
-    marginHorizontal: 10,
     paddingVertical: 10,
     paddingHorizontal: 12,
     overflow: 'hidden',

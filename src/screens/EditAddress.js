@@ -90,7 +90,7 @@ class EditAddress extends React.Component {
         const { addNew, city, state, addressLine1, id, addressLine2, navigation } = this.state;
         var data = {};
         data.state = state;
-        data.city = city;
+        data.city = city.label;
         data.id = id;
         data.addressLine1 = addressLine1;
         if (addressLine2) {
@@ -177,7 +177,7 @@ class EditAddress extends React.Component {
                             titleStyle={{ marginLeft: 10, color: ThemeColor.text2 }}
                             value={this.state.city}
                             enableModalBlur
-                            onChange={city => this.setState({ city: city.label })}
+                            onChange={city => this.setState({ city: city })}
                             topBarProps={{ title: 'Cities' }}
                             style={{ ...styles.inputStyle, backgroundColor: ThemeColor.Bg3, color: ThemeColor.text1 }}
                             hideUnderline

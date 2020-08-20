@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "49169297069",
+    "firebase_url": "https://zhop-cfe64.firebaseio.com",
+    "project_id": "zhop-cfe64",
+    "storage_bucket": "zhop-cfe64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49169297069:android:1ab6a0a475b2a3e4686024",
+        "android_client_info": {
+          "package_name": "com.saihl.Zhop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49169297069-l77dead61j2qt9r3aujjtsqp17ku0s4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNvP5JS-odRjQX9nLuiFNI01eV3sX68Cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "49169297069-l77dead61j2qt9r3aujjtsqp17ku0s4f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

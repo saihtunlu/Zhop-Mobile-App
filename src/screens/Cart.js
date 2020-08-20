@@ -37,14 +37,13 @@ class Cart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            carts: this.props.cart,
+            carts: [],
             selectedIndex: 0,
             key: Date.now(),
             navigation: this.props.navigation,
             subtotal: 0,
             total: 0,
             index: null,
-            isReady: false,
             ThemeColor: store.getState().Theme.theme,
         };
         store.subscribe(() => {
@@ -57,18 +56,13 @@ class Cart extends Component {
     componentDidMount() {
         const { navigation } = this.props;
         this.focusListener = navigation.addListener("focus", () => {
-            const { cart } = this.props;
+            const cart = this.props.cart;
             this.setState({ cart: cart })
-            if (cart.length > 0) {
-                InteractionManager.runAfterInteractions(() => {
-                    this.Calculate(cart)
-                })
-            } else {
-                this.setState({ isReady: true })
-            }
+            this.Calculate()
         });
     }
-    Calculate = async (carts) => {
+    Calculate = async () => {
+        var carts = this.props.cart
         var array = []
         carts.forEach(data => {
             if (!data.sale_price) {
@@ -79,10 +73,9 @@ class Cart extends Component {
             array.push(data)
         });
 
-        this.setState({ carts: array })
-        var subtotal = parseInt(this.subtotalPrice())
-        var total = (parseInt(this.subtotalPrice()) + parseInt(this.subtotalPrice() * 0.05))
-        this.setState({ subtotal: subtotal, total: total, isReady: true })
+        var subtotal = parseInt(this.subtotalPrice(carts))
+        var total = (parseInt(this.subtotalPrice(carts)) + parseInt(this.subtotalPrice(carts) * 0.05))
+        this.setState({ carts: array, subtotal: subtotal, total: total })
     }
     ChooseParams = (data, navigation) => {
         var product = data.type === "Simple Product" ? data : data.product;
@@ -91,8 +84,8 @@ class Cart extends Component {
     handle = (count, index) => {
         var AllCarts = this.state.carts;
         AllCarts[index].addCart = count;
-        var subtotal = parseInt(this.subtotalPrice())
-        var total = (parseInt(this.subtotalPrice()) + parseInt(this.subtotalPrice() * 0.05))
+        var subtotal = parseInt(this.subtotalPrice(AllCarts))
+        var total = (parseInt(this.subtotalPrice(AllCarts)) + parseInt(this.subtotalPrice(AllCarts) * 0.05))
         this.props.addCart(AllCarts)
         this.setState({ subtotal: subtotal, total: total })
 
@@ -165,8 +158,7 @@ class Cart extends Component {
             </Animatable.View>
         );
     }
-    subtotalPrice = () => {
-        const { carts } = this.state;
+    subtotalPrice = (carts) => {
         if (carts) {
             return carts.reduce((sum, item) => sum + (item.sale_price ? item.addCart * item.sale_price : item.addCart * item.regular_price), 0);
         }
@@ -197,14 +189,6 @@ class Cart extends Component {
             outputRange: [1, 0],
             extrapolate: 'clamp'
         })
-        if (!this.state.isReady) {
-            return (
-                <View style={{ flex: 1, backgroundColor: ThemeColor.Bg1, alignItems: 'center', justifyContent: 'center' }}>
-                    <ActivityIndicator size="large" color={`rgb(${ThemeColor.primary})`} />
-                </View>
-            )
-        }
-
         return (
             <View style={{ flex: 1 }}>
                 <Animated.View style={{
